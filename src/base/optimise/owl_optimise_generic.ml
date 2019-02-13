@@ -366,7 +366,7 @@ module Make
         epochs            = epochs;
         batches           = batches;
         loss              = Array.make (batches + 1) (_f 0.);
-        start_at          = Unix.gettimeofday ();
+        start_at          = 0.;
         stop              = false;
         gs                = [| [| _f 0. |] |];
         ps                = [| [| _f 0. |] |];
@@ -376,7 +376,7 @@ module Make
 
     let default_checkpoint_fun save_fun =
       let file_name = Printf.sprintf "%s/%s.%i"
-        (Sys.getcwd ()) "model" (Unix.time () |> int_of_float)
+        (Sys.getcwd ()) "model" (0. |> int_of_float)
       in
       Owl_log.info "checkpoint => %s" file_name;
       save_fun file_name
@@ -390,12 +390,12 @@ module Make
       let l1 = state.loss.(b_i) |> unpack_flt in
       let d = l0 -. l1 in
       let s = if d = 0. then "-" else if d < 0. then "▲" else "▼" in
-      let t = (Unix.gettimeofday () -. state.start_at) |> Owl_utils.format_time in
+      let t = (0. -. state.start_at) |> Owl_utils.format_time in
       Owl_log.info "T: %s | E: %.1f/%g | B: %i/%i | L: %.6f[%s]"
         t e_i e_n b_i b_n l1 s
 
     let print_summary state =
-      (Unix.gettimeofday () -. state.start_at)
+      (0. -. state.start_at)
       |> Owl_utils.format_time
       |> Printf.printf "--- Training summary\n    Duration: %s\n"
       |> flush_all
