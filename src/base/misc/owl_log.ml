@@ -52,6 +52,9 @@ let _level_to_str = function
   | FATAL -> _shall_paint Magenta "FATAL"
 
 let make_prefix lvl =
+  let now = Ptime_clock.now () in
+  let tz_offset_s = Ptime_clock.current_tz_offset_s () in
+  Printf.sprintf "%s %s" (Ptime.to_rfc3339 ?tz_offset_s now)
     (_level_to_str lvl)
 
 let _log lvl fmt =
