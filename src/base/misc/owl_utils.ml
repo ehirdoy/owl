@@ -210,11 +210,7 @@ let format_time t =
 
 (** measure the time spent in a function in millisecond *)
 let time f =
-  let t1 = Mtime_clock.elapsed_ns () in
-  f ();
-  let t2 = Mtime_clock.elapsed_ns () in
-  Int64.(sub t2 t1 |> to_float) /. 1_000_000.
-
+  0.
 
 (** TODO: return the the distance between [1.0] and the next larger representable
   floating-point value. *)

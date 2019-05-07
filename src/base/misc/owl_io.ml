@@ -46,22 +46,13 @@ let iteri_lines_of_file ?(verbose=true) f fname =
   let i = ref 0 in
   let h = open_in fname in
   (
-    let t0 = Mtime_clock.elapsed_ns () in
-    let t1 = ref (Mtime_clock.elapsed_ns ()) in
     try while true do
       f !i (input_line h);
       i := !i + 1;
       (* output summary if in verbose mode *)
       if verbose = true then (
-        let t2 = Mtime_clock.elapsed_ns () in
-        let d12 = (Int64.((sub t2 !t1) |> to_float)) /. 1_000_000_000. in
-        if d12 > 5. then (
-          t1 := t2;
-          let d02 = (Int64.((sub t2 t0) |> to_float)) /. 1_000_000_000. in
-          let speed = float_of_int !i /. d02 |> int_of_float in
-          Owl_log.info "processed %i, avg. %i docs/s" !i speed
+          Owl_log.info "processed %i" !i
         )
-      )
     done with End_of_file -> ()
   );
   close_in h
@@ -81,23 +72,13 @@ let iteri_lines_of_marshal ?(verbose=true) f fname =
   let i = ref 0 in
   let h = open_in fname in
   (
-    let t1 = ref (Mtime_clock.elapsed_ns ()) in
-    let i1 = ref 0 in
-
     try while true do
       f !i (Marshal.from_channel h);
       i := !i + 1;
       (* output summary if in verbose mode *)
       if verbose = true then (
-        let t2 = Mtime_clock.elapsed_ns () in
-        let delta = (Int64.((sub t2 !t1) |> to_float)) /. 1_000_000_000. in
-        if delta > 5. then (
-          let speed = float_of_int (!i - !i1) /. delta |> int_of_float in
-          i1 := !i;
-          t1 := t2;
-          Owl_log.info "processed %i, avg. %i docs/s" !i speed
+          Owl_log.info "processed %i" !i
         )
-      )
     done with End_of_file -> ()
   );
   close_in h

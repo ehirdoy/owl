@@ -15,5 +15,5 @@
  (wrapped false)
 
  (flags (:standard -safe-string))
- (libraries bigarray mtime mtime.clock.os ptime ptime.clock.os)
+ (libraries bigarray)
  )
